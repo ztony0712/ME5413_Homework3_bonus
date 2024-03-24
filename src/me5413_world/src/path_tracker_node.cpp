@@ -18,7 +18,7 @@ double SPEED_TARGET;
 double PID_Kp, PID_Ki, PID_Kd;
 double look_ahead_distance; // Pure pursuit look ahead distance
 bool PARAMS_UPDATED;
-double kp_yaw_error = 2; // Angular velocity proportional coefficient
+double kp_yaw_error; // Angular velocity proportional coefficient
 
 // A dynamic parameter callback function to set dynamic parameters upon changes
 void dynamicParamCallback(const me5413_world::path_trackerConfig& config, uint32_t level)
@@ -31,7 +31,7 @@ void dynamicParamCallback(const me5413_world::path_trackerConfig& config, uint32
   PID_Kd = config.PID_Kd;
   // Load ahead distance
   look_ahead_distance = config.look_ahead_distance;
-  
+  kp_yaw_error = config.kp_yaw_error;
   PARAMS_UPDATED = true;
 }
 
