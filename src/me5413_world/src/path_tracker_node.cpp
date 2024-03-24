@@ -7,6 +7,7 @@
  * ROS Node for robot to track a given path
  */
 
+#include "angles/angles.h"
 #include "me5413_world/math_utils.hpp"
 #include "me5413_world/path_tracker_node.hpp"
 
@@ -73,29 +74,15 @@ void PathTrackerNode::robotOdomCallback(const nav_msgs::Odometry::ConstPtr& odom
 // Function to find a goal point on the path based on lookahead distance
 geometry_msgs::Point PathTrackerNode::findGoalPoint(const tf2::Vector3& point_robot, const nav_msgs::Path::ConstPtr& path, double look_ahead_distance)
 {
-  // Iterate over the path
-  for(int i = 0; i < path->poses.size(); i++)
-  {
+  auto it = std::find_if(path->poses.begin(), path->poses.end(), [&](const geometry_msgs::PoseStamped& pose){
     tf2::Vector3 point_path;
-    tf2::fromMsg(path->poses[i].pose.position, point_path);
-    double distance = tf2::tf2Distance(point_robot, point_path); // Calculate the distance between robot and path point
-    // Determine whether distance is greater than set threshold
-    if(distance >= look_ahead_distance)
-    {
-      return path->poses[i].pose.position;
-    }
-  }
-  return path->poses.back().pose.position;  // // No point found within the look_ahead_distance, return the last point
+    tf2::fromMsg(pose.pose.position, point_path);
+    return tf2::tf2Distance(point_robot, point_path) >= look_ahead_distance;
+  });
+  return (it != path->poses.end()) ? it->pose.position : path->poses.back().pose.position;
 }
 
-// Function to normalize an angle in the range [-pi, pi)
-double PathTrackerNode::normalizeAngle(double angle)
-{
-  double a = fmod(angle + M_PI, 2.0 * M_PI);
-  if(a < 0)
-    a += 2.0 * M_PI;
-  return a - M_PI;
-}
+
 
 // Function to calculate the control output
 geometry_msgs::Twist PathTrackerNode::computeControlOutputs(const nav_msgs::Odometry& odom_robot, const nav_msgs::Path::ConstPtr& path)
@@ -125,7 +112,7 @@ geometry_msgs::Twist PathTrackerNode::computeControlOutputs(const nav_msgs::Odom
   // Find the goal point and calculate the error
   geometry_msgs::Point goal_point = findGoalPoint(point_robot, path, look_ahead_distance);
   double yaw_goal = atan2(goal_point.y - point_robot.y(), goal_point.x - point_robot.x());
-  double yaw_error = normalizeAngle(yaw_goal - yaw_robot); // normalize it to [-pi, pi)
+  double yaw_error = angles::normalize_angle(yaw_goal - yaw_robot); // normalize it to [-pi, pi)
 
   // Controller output angle control
   cmd_vel.angular.z = kp_yaw_error * yaw_error;    // kp_yaw_error is proportional coefficient

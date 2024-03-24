@@ -54,7 +54,6 @@ class PathTrackerNode
   tf2::Transform convertPoseToTransform(const geometry_msgs::Pose& pose);
   geometry_msgs::Twist computeControlOutputs(const nav_msgs::Odometry& odom_robot, const nav_msgs::Path::ConstPtr& path);
   geometry_msgs::Point findGoalPoint(const tf2::Vector3& point_robot, const nav_msgs::Path::ConstPtr& path, double look_ahead_distance);
-  double normalizeAngle(double angle);
   // ROS declaration
   ros::NodeHandle nh_;
   ros::Timer timer_;
