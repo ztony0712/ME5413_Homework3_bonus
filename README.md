@@ -1,3 +1,11 @@
+# ME4313_Bonus_README
+For this project, we Group1 have implemented a set of control system to keep the RMSE of the given path at a very low level. To be more specific, an adjusted PID controller is used to control linear speed and a Pure Pursuit algorithm is used to control angular speed. The best parameters and metrics are recorded in the cmd.txt and plots of three RMSE variation are saved. The metris folder contains all these evaluation results.
+
+And there is also a simple script which can print the average RMSE and plot variation. Directly run it by running:
+```
+python evaluate.py
+```
+
 # ME5413_Planning_Project
 
 NUS ME5413 Autonomous Mobile Robotics Planning Project

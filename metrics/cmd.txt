@@ -18,6 +18,6 @@ gen.add("kp_yaw_error", double_t, 1, "Default: 2.1", 2.1, 0, 10.0)
 
 exit(gen.generate(PACKAGE, "path_tracker_node", "path_tracker"))
 
-/me5413_world/planning/rms_heading_error Average: 6.419483508927156
-/me5413_world/planning/rms_position_error Average: 0.39748565911677686
-/me5413_world/planning/rms_speed_error Average: 0.31772343247488744
+/me5413_world/planning/rms_heading_error Average Value: 4.63631534576416
+/me5413_world/planning/rms_position_error Average Value: 0.23190581798553467
+/me5413_world/planning/rms_speed_error Average Value: 0.3797612190246582
